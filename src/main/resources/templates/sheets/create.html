@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+    <div th:replace="partials :: metaTags" />
+    <div th:replace="partials :: links" />
+
+    <title>Create a Character</title>
+
+</head>
+<body>
+<nav th:replace="partials :: siteBar" />
+
+<h1 class="text-center my-5">Create a Character</h1>
+
+<div class="container bg-dark rounded-3 p-5">
+    <form id="createCharacterForm" class="text-light" th:action="@{/create}" method="POST" th:object="${playerCharacter}">
+        <div id="characterNameDiv" class="mb-3">
+            <label for="characterName">Choose your character's name: </label>
+            <input id="characterName" type="text" th:field="*{name}">
+        </div>
+        <div id="chooseClassDiv"></div>
+        <div id="chooseRaceDiv" class="my-3"></div>
+        <div id="rollAbilityScoresDiv" class="d-flex w-100 justify-content-between mb-3">
+            <div class="text-center me-3">
+                <div class="fs-4">STR</div>
+                <div><input id="strValue" type="text" size="3" class="mb-2" style="text-align: center;"></div>
+                <button id="strBtn" type="button" class="btn btn-primary w-100">Roll</button>
+            </div>
+            <div class="text-center mx-3">
+                <div class="fs-4">DEX</div>
+                <div><input id="dexValue" type="text" size="3" class="mb-2" style="text-align: center;"></div>
+                <button id="dexBtn" type="button" class="btn btn-primary w-100">Roll</button>
+            </div>
+            <div class="text-center mx-3">
+                <div class="fs-4">CON</div>
+                <div><input id="conValue" type="text" size="3" class="mb-2" style="text-align: center;"></div>
+                <button id="conBtn" type="button" class="btn btn-primary w-100">Roll</button>
+            </div>
+            <div class="text-center mx-3">
+                <div class="fs-4">INT</div>
+                <div><input id="intValue" type="text" size="3" class="mb-2" style="text-align: center;"></div>
+                <button id="intBtn" type="button" class="btn btn-primary w-100">Roll</button>
+            </div>
+            <div class="text-center mx-3">
+                <div class="fs-4">WIS</div>
+                <div><input id="wisValue" type="text" size="3" class="mb-2" style="text-align: center;"></div>
+                <button id="wisBtn" type="button" class="btn btn-primary w-100">Roll</button>
+            </div>
+            <div class="text-center ms-3">
+                <div class="fs-4">CHA</div>
+                <div><input id="chaValue" type="text" size="3" class="mb-2" style="text-align: center;"></div>
+                <button id="chaBtn" type="button" class="btn btn-primary w-100">Roll</button>
+            </div>
+
+        </div>
+        <button id="createCharacterBtn" type="submit" class="btn btn-primary">Create Character</button>
+    </form>
+</div>
+
+
+
+
+<div th:replace="partials :: scripts" />
+<script th:src="@{/js/create.js}" />
+<script src="../../static/js/create.js"></script>
+</body>
+</html>

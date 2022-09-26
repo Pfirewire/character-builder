@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+
+    <div th:replace="partials :: metaTags" />
+    <div th:replace="partials :: links" />
+
+    <title>Populate Races Table</title>
+</head>
+<body>
+<nav th:replace="partials :: siteBar" />
+
+<h1 class="text-center my-5">Populate Races</h1>
+
+<div id="racesInfoDiv">
+    <div id="chooseRaceDiv" class="my-3"></div>
+    <form th:action="@{/populate/races}" method="POST" th:object="${race}">
+        <div id="raceFormDiv"></div>
+    </form>
+</div>
+
+<div th:replace="partials :: scripts" />
+<script th:src="@{/js/populate-races.js}" />
+<script src="../../static/js/populate-races.js"></script>
+</body>
+</html>
