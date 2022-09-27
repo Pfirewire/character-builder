@@ -4,6 +4,12 @@ $(()=> {
 
     // Create character object with methods
     const CreateCharacter = {
+        characterClass: () => {
+            Get.classes();
+        },
+        race: () => {
+            Get.races();
+        },
         rollDSix: () => {
             return Math.floor(Math.random() * 6) + 1;
         },
@@ -16,6 +22,28 @@ $(()=> {
             let lowestRollIndex = rolls.indexOf(lowestRoll);
             Output.displayAbilityScoreRoll(rolls, lowestRoll, scoreDiv);
             Output.changeRollButton(rolls, lowestRollIndex, scoreDiv);
+        },
+        proficiencyChoices: () => {
+            $("#allClasses").change(() => {
+                if($("#allClasses").val() != 0) {
+                    $.get(`${baseUrl}classes/${$("#allClasses").val()}`, () => {
+                    })
+                        .done(characterClass => {
+                            $("#chooseProficienciesDiv").html(Output.printProficiencyOptions(characterClass))
+                        })
+                    ;
+                }
+            });
+        },
+        raceDescription: () => {
+            $("#allRaces").change(() => {
+                let race = $("#allRaces").val();
+                if(race === 0) {
+                    $("#showRaceDescriptionDiv").html("");
+                } else {
+                    Get.raceDescription(race);
+                }
+            });
         }
     };
     // Output object with methods
@@ -30,40 +58,36 @@ $(()=> {
             return html;
         },
         printClassOptions: classes => {
-            let html = "";
-            html += `
+            $("#chooseClassDiv").html(`
                 <label for="allClasses">Choose a Class: </label>
                 <select name="allClasses" id="allClasses">
-                    <option value="0" selected>Select One</option>
+                    <option value="0">Select One</option>
                     ${Output.listSelectOptions(classes)}
                 </select>
-            `;
-            return html;
+            `);
         },
         printRaceOptions: races => {
-            let html = "";
-            html += `
+            $("#chooseRaceDiv").html(`
                 <label for="allRaces">Choose a Race: </label>
                 <select name="allRaces" id="allRaces">
-                    <option value="0" selected>Select One</option>
+                    <option value="0">Select One</option>
                     ${Output.listSelectOptions(races)}
                 </select>
+            `);
+        },
+        printProficiencyOptions: characterClass => {
+            let html = "";
+            html += `
+                <span>Choose ${characterClass.proficiency_choices[0].choose} from the following list: </span>
             `;
             return html;
         },
-        printClassDescription: characterClass => {
-
-        },
-        printRaceDescription: raceName => {
-            $.get(baseUrl + "races/" + raceName, () => {})
-                .done(raceData => {
-                    $("#showRaceDescriptionDiv").html(`
-                        <p>${raceData.alignment}</p>
-                        <p>${raceData.age}</p>
-                        <p>${raceData.size_description}</p>
-                    `);
-                })
-            ;
+        printRaceDescription: raceData => {
+            $("#showRaceDescriptionDiv").html(`
+                <p>${raceData.alignment}</p>
+                <p>${raceData.age}</p>
+                <p>${raceData.size_description}</p>
+            `);
         },
         displayAbilityScoreRoll: (rolls, lowestRoll, scoreDiv) => {
             scoreDiv.children().last().prev().children().val(rolls.reduce((a,b) => a+b) - lowestRoll);
@@ -81,43 +105,43 @@ $(()=> {
             scoreDiv.children().last().removeAttr("type");
             scoreDiv.children().last().removeClass("btn btn-primary roll-btn");
             scoreDiv.children().last().addClass("bg-primary py-2 rounded-2");
-            console.log(scoreDiv.children().last().attr("id"));
+        }
+    }
+    // Get object for API calls
+    const Get = {
+        classes: () => {
+            $.get(baseUrl + "classes", () => {})
+                .done(classes => {
+                    Output.printClassOptions(classes)
+                    CreateCharacter.proficiencyChoices();
+                })
+            ;
+        },
+        classProficiencyOptions: () => {
+
+        },
+        races: () => {
+            $.get(baseUrl + "races", () => {})
+                .done(races => {
+                    Output.printRaceOptions(races);
+                    CreateCharacter.raceDescription();
+                })
+            ;
+        },
+        raceDescription: race => {
+            $.get(baseUrl + "races/" + race, () => {})
+                .done(raceData => {
+                    Output.printRaceDescription(raceData);
+                })
+            ;
         }
     }
 
-    // Get all classes and display in select box
-    $.get(baseUrl + "classes", () => {})
-        .done(data => {
-            let classes = data;
-            $("#chooseClassDiv").html(`
-                ${Output.printClassOptions(classes)}
-            `);
-        })
-    ;
-
-    // Get all races and display in select box
-    $.get(baseUrl + "races", () => {})
-        .done(data => {
-            let races = data;
-            $("#chooseRaceDiv").html(`
-                ${Output.printRaceOptions(races)}
-            `);
-            $("#allRaces").change(() => {
-                if($("#allRaces").val() == 0) {
-                    $("#showRaceDescriptionDiv").html("");
-                } else {
-                    $("#showRaceDescriptionDiv").html(`
-                        ${Output.printRaceDescription($("#allRaces").val())}
-                    `);
-                }
-            });
-        })
-    ;
+    CreateCharacter.characterClass();
+    CreateCharacter.race();
 
     // Called whenever roll buttons are clicked
     $(".roll-btn").click(function(e) {
-        console.log("inside click roll-btn");
-        console.log($(this).parent().attr("id"));
         e.preventDefault();
         CreateCharacter.rollAbilityScore($(this).parent());
     });
