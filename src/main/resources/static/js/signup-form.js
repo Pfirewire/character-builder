@@ -1,6 +1,6 @@
 $(() => {
-    let userHasFocusedPassword = false;
-    let userHasFocusedConfirm = false;
+
+    // Local variables and requirements
     let passwordFulfillsRequirements = false;
     let lengthMet = false;
     let uppercaseMet = false;
@@ -9,168 +9,152 @@ $(() => {
     let specialMet = false;
     let disabledAttribute = $("#signupPasswordSubmit").attr("disabled");
 
-
-    const isNumber = input => {
-        return !(isNaN(Number(input)));
-    }
-
-    const atLeastEight = input => {
-        if(input.length >= 8) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
-    const containsLowercase = input => {
-        for(let i = 0; i < input.length; i++) {
-            if(input.charAt(i).toLowerCase() === input.charAt(i) && !(isNumber(input.charAt(i))) && !(containsSpecialCharacter(input.charAt(i)))) {
+    // Check object for methods checking parameters
+    const Check = {
+        isNumber: input => {
+            return !(isNaN(Number(input)));
+        },
+        atLeastEight: input => {
+            if(input.length >= 8) {
                 return true;
+            } else {
+                return false;
             }
-        }
-        return false;
-    }
-
-    const containsUppercase = input => {
-        for(let i = 0; i < input.length; i++) {
-            if(input.charAt(i).toUpperCase() === input.charAt(i) && !(isNumber(input.charAt(i))) && !(containsSpecialCharacter(input.charAt(i)))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    const containsNumber = input => {
-        for(let i = 0; i < input.length; i++) {
-            if(isNumber(input.charAt(i))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    const containsSpecialCharacter = input => {
-        let specials = "!@#$%^&*()-=_+"
-        for(let i = 0; i < input.length; i++) {
-            for(let j = 0; j < specials.length; j++) {
-                if(input.charAt(i) === specials.charAt(j)) {
+        },
+        containsLowercase: input => {
+            for(let i = 0; i < input.length; i++) {
+                if(input.charAt(i).toLowerCase() === input.charAt(i) && !(Check.isNumber(input.charAt(i))) && !(Check.containsSpecialCharacter(input.charAt(i)))) {
                     return true;
                 }
             }
-        }
-        return false;
-    }
-
-    const requirementsNotMet = (input) => {
-        if(atLeastEight(input) && containsLowercase(input) && containsUppercase(input) && containsNumber(input) && containsSpecialCharacter(input)){
             return false;
-        } else {
-            return true;
+        },
+        containsUppercase: input => {
+            for(let i = 0; i < input.length; i++) {
+                if(input.charAt(i).toUpperCase() === input.charAt(i) && !(Check.isNumber(input.charAt(i))) && !(Check.containsSpecialCharacter(input.charAt(i)))) {
+                    return true;
+                }
+            }
+            return false;
+        },
+        containsNumber: input => {
+            for(let i = 0; i < input.length; i++) {
+                if(Check.isNumber(input.charAt(i))) {
+                    return true;
+                }
+            }
+            return false;
+        },
+        containsSpecialCharacter: input => {
+            let specials = "!@#$%^&*()-=_+"
+            for(let i = 0; i < input.length; i++) {
+                for(let j = 0; j < specials.length; j++) {
+                    if(input.charAt(i) === specials.charAt(j)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        },
+        requirementsNotMet: input => {
+            if(Check.atLeastEight(input) && Check.containsLowercase(input) && Check.containsUppercase(input) && Check.containsNumber(input) && Check.containsSpecialCharacter(input)){
+                return false;
+            } else {
+                return true;
+            }
+        },
+        confirmMatchesPassword: () => {
+            return $("#signupConfirmPassword").val() === $("#signupPassword").val();
         }
     }
 
-    const revertBorder = selector => {
-        selector.css("border", "1px solid #ced4da");
-    }
-
-    const makeBorderRed = selector => {
-        selector.css("border", "2px solid #F00");
-    }
-
-    const makeTextRed = selector => {
-        selector.css("color", "#F00");
-    }
-
-    const revertText = selector => {
-        selector.css("color", "#6c757d");
-    }
-
-    const changeBorderBasedOnRequirements = selector => {
-        if(requirementsNotMet(selector.val())){
-            makeBorderRed(selector);
-        } else {
-            revertBorder(selector);
+    // Output object for output methods
+    const Output = {
+        Text: {
+            revert: selector => {
+                selector.css("color", "#6c757d");
+            },
+            makeRed: selector => {
+                selector.css("color", "#F00");
+            }
+        },
+        Border: {
+            revert: selector => {
+                selector.css("border", "1px solid #ced4da");
+            },
+            makeRed: selector => {
+                selector.css("border", "2px solid #F00");
+            },
+            changeOnRequirements: selector => {
+                if(Check.requirementsNotMet(selector.val())){
+                    Output.Border.makeRed(selector);
+                } else {
+                    Output.Border.revert(selector);
+                }
+            },
+            changePasswordMatch: selector => {
+                if(Check.confirmMatchesPassword()) {
+                    Output.Border.revert(selector);
+                    $("#passwordsMustMatch").removeClass("d-block").addClass("d-none");
+                } else {
+                    Output.Border.makeRed(selector);
+                    $("#passwordsMustMatch").removeClass("d-none").addClass("d-block");
+                }
+            }
+        },
+        changeIndividualRequirements: value => {
+            lengthMet = Check.atLeastEight(value);
+            lengthMet ? Output.Text.revert($("#signupPasswordHelpLength")) : Output.Text.makeRed($("#signupPasswordHelpLength"));
+            lowercaseMet = Check.containsLowercase(value);
+            lowercaseMet ? Output.Text.revert($("#signupPasswordHelpLowercaseLetter")) : Output.Text.makeRed($("#signupPasswordHelpLowercaseLetter"));
+            uppercaseMet = Check.containsUppercase(value);
+            uppercaseMet ? Output.Text.revert($("#signupPasswordHelpUppercaseLetter")) : Output.Text.makeRed($("#signupPasswordHelpUppercaseLetter"));
+            numberMet = Check.containsNumber(value);
+            numberMet ? Output.Text.revert($("#signupPasswordHelpNumber")) : Output.Text.makeRed($("#signupPasswordHelpNumber"));
+            specialMet = Check.containsSpecialCharacter(value);
+            specialMet ? Output.Text.revert($("#signupPasswordHelpSpecialCharacters")) : Output.Text.makeRed($("#signupPasswordHelpSpecialCharacters"));
+        },
+        submitButtonEnableDisable: () => {
+            disabledAttribute = $("#signupPasswordSubmit").attr("disabled");
+            if(!(Check.requirementsNotMet($("#signupPassword").val())) && Check.confirmMatchesPassword()) {
+                passwordFulfillsRequirements = true;
+            }
+            if(passwordFulfillsRequirements) {
+                $("#signupPasswordSubmit").removeAttr("disabled");
+            } else if(typeof disabledAttribute === undefined || typeof disabledAttribute === false) {
+                $("#signupPasswordSubmit").attr("disabled", "");
+            }
         }
     }
 
-    const changeIndividualRequirements = value => {
-        lengthMet = atLeastEight(value);
-        lengthMet ? revertText($("#signupPasswordHelpLength")) : makeTextRed($("#signupPasswordHelpLength"));
-        lowercaseMet = containsLowercase(value);
-        lowercaseMet ? revertText($("#signupPasswordHelpLowercaseLetter")) : makeTextRed($("#signupPasswordHelpLowercaseLetter"));
-        uppercaseMet = containsUppercase(value);
-        uppercaseMet ? revertText($("#signupPasswordHelpUppercaseLetter")) : makeTextRed($("#signupPasswordHelpUppercaseLetter"));
-        numberMet = containsNumber(value);
-        numberMet ? revertText($("#signupPasswordHelpNumber")) : makeTextRed($("#signupPasswordHelpNumber"));
-        specialMet = containsSpecialCharacter(value);
-        specialMet ? revertText($("#signupPasswordHelpSpecialCharacters")) : makeTextRed($("#signupPasswordHelpSpecialCharacters"));
-    }
-
-    const confirmMatchesPassword = () => {
-        return $("#signupConfirmPassword").val() === $("#signupPassword").val();
-    }
-
-    const changeBorderPasswordMatch = selector => {
-        if(confirmMatchesPassword()) {
-            revertBorder(selector);
-            $("#passwordsMustMatch").removeClass("d-block").addClass("d-none");
-        } else {
-            makeBorderRed(selector);
-            $("#passwordsMustMatch").removeClass("d-none").addClass("d-block");
-        }
-    }
-
-    const submitButtonEnableDisable = () => {
-        disabledAttribute = $("#signupPasswordSubmit").attr("disabled");
-        if(!(requirementsNotMet($("#signupPassword").val())) && confirmMatchesPassword()) {
-            passwordFulfillsRequirements = true;
-        }
-        if(passwordFulfillsRequirements) {
-            $("#signupPasswordSubmit").removeAttr("disabled");
-        } else if(typeof disabledAttribute === undefined || typeof disabledAttribute === false) {
-            $("#signupPasswordSubmit").attr("disabled", "");
-        }
-    }
-
+    // Checking and changing password field and text based on requirements
     $("#signupPassword")
         .focus(() => {
-            console.log("inside password focus. userHasFocusedPassword: " + userHasFocusedPassword);
-            if(!userHasFocusedPassword) {
-                makeTextRed($(`
-                #signupPasswordHelpLength, 
-                #signupPasswordHelpUppercaseLetter, 
-                #signupPasswordHelpLowercaseLetter, 
-                #signupPasswordHelpNumber, 
-                #signupPasswordHelpSpecialCharacters
-                `));
-            }
-            userHasFocusedPassword = true;
-            changeBorderBasedOnRequirements($("#signupPassword"));
-            changeIndividualRequirements($("#signupPassword").val());
+            Output.Border.changeOnRequirements($("#signupPassword"));
+            Output.changeIndividualRequirements($("#signupPassword").val());
         })
         .keyup(() => {
-            changeBorderBasedOnRequirements($("#signupPassword"));
-            changeIndividualRequirements($("#signupPassword").val());
-            submitButtonEnableDisable();
+            Output.Border.changeOnRequirements($("#signupPassword"));
+            Output.changeIndividualRequirements($("#signupPassword").val());
+            Output.submitButtonEnableDisable();
         })
     ;
 
+    // Checking and changing confirm password field and text based on requirements
     $("#signupConfirmPassword")
         .focus(() => {
-            userHasFocusedConfirm = true;
-            changeBorderPasswordMatch($("#signupConfirmPassword"));
+            Output.Border.changePasswordMatch($("#signupConfirmPassword"));
         })
         .keyup(() => {
-            changeBorderPasswordMatch($("#signupConfirmPassword"));
-            submitButtonEnableDisable();
+            Output.Border.changePasswordMatch($("#signupConfirmPassword"));
+            Output.submitButtonEnableDisable();
         })
     ;
 
+    // Toggles signup sheet
     $("#notAUserToggle")
         .click(() => {
             $("#signupContainer").slideToggle();
         });
-
 
 });
