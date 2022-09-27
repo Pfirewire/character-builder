@@ -27,8 +27,8 @@ public class User {
     @Column(nullable = false)
     @JsonIgnore
     private String password;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<PlayerCharacter> characters;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+//    private List<PlayerCharacter> characters;
 
 
     // Constructor functions

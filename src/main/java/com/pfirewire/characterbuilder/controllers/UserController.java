@@ -1,7 +1,6 @@
 package com.pfirewire.characterbuilder.controllers;
 
 import com.pfirewire.characterbuilder.models.User;
-import com.pfirewire.characterbuilder.repositories.PlayerCharacterRepository;
 import com.pfirewire.characterbuilder.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -13,17 +12,14 @@ public class UserController {
 
     // Repositories and Services
     private UserRepository userDao;
-    private PlayerCharacterRepository playerCharacterDao;
     private PasswordEncoder passwordEncoder;
 
     // Constructor
     public UserController(
             UserRepository userDao,
-            PlayerCharacterRepository playerCharacterDao,
             PasswordEncoder passwordEncoder)
     {
         this.userDao = userDao;
-        this.playerCharacterDao = playerCharacterDao;
         this.passwordEncoder = passwordEncoder;
     }
 

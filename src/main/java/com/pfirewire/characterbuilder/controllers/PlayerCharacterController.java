@@ -17,21 +17,12 @@ public class PlayerCharacterController {
 
     // Repositories and Services
     private final UserRepository userDao;
-    private final PlayerCharacterRepository playerCharacterDao;
-    private final RaceRepository raceDao;
-    private final CharacterClassRepository characterClassDao;
 
     // Constructor
     public PlayerCharacterController(
-            UserRepository userDao,
-            PlayerCharacterRepository playerCharacterDao,
-            RaceRepository raceDao,
-            CharacterClassRepository characterClassDao)
+            UserRepository userDao)
     {
         this.userDao = userDao;
-        this.playerCharacterDao = playerCharacterDao;
-        this.raceDao = raceDao;
-        this.characterClassDao = characterClassDao;
     }
 
     // Displays Create Character Form
@@ -42,25 +33,30 @@ public class PlayerCharacterController {
     }
 
     @PostMapping("/create")
-    public String createPlayerCharacter(
-            @ModelAttribute @Valid PlayerCharacter playerCharacter,
-            @RequestParam(name = "allRaces") String race,
-            @RequestParam(name = "allClasses") String characterClass,
-            Errors validation,
-            Model model)
-    {
-        if(validation.hasErrors()) {
-            model.addAttribute("errors", validation);
-            model.addAttribute("playerCharacter", playerCharacter);
-            return "sheets/create";
-        }
-
-        playerCharacter.setUser((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        playerCharacter.setRace(raceDao.findByType(race));
-        playerCharacter.setCharacterClass(characterClassDao.findByName(characterClass));
-        playerCharacterDao.save(playerCharacter);
-        return "redirect:/characters";
+    public String createPlayerCharacter(Model model) {
+        return "sheets/characters";
     }
+//
+//    @PostMapping("/create")
+//    public String createPlayerCharacter(
+//            @ModelAttribute @Valid PlayerCharacter playerCharacter,
+//            @RequestParam(name = "allRaces") String race,
+//            @RequestParam(name = "allClasses") String characterClass,
+//            Errors validation,
+//            Model model)
+//    {
+//        if(validation.hasErrors()) {
+//            model.addAttribute("errors", validation);
+//            model.addAttribute("playerCharacter", playerCharacter);
+//            return "sheets/create";
+//        }
+//
+//        playerCharacter.setUser((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+//        playerCharacter.setRace(raceDao.findByType(race));
+//        playerCharacter.setCharacterClass(characterClassDao.findByName(characterClass));
+//        playerCharacterDao.save(playerCharacter);
+//        return "redirect:/characters";
+//    }
 
     @GetMapping("/characters")
     public String showCharacters(Model model) {

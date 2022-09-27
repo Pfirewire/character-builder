@@ -15,43 +15,45 @@
 <h1 class="text-center my-5">Create a Character</h1>
 
 <div class="container bg-dark rounded-3 p-5">
-    <form id="createCharacterForm" class="text-light" th:action="@{/create}" method="POST" th:object="${playerCharacter}">
+    <form id="createCharacterForm" class="text-light" th:action="@{/create}" method="POST">
         <div id="characterNameDiv" class="mb-3">
             <label for="characterName">Choose your character's name: </label>
-            <input id="characterName" type="text" th:field="*{name}">
+            <input id="characterName" type="text">
         </div>
         <div id="chooseClassDiv"></div>
+        <div id="showClassDescriptionDiv"></div>
         <div id="chooseRaceDiv" class="my-3"></div>
+        <div id="showRaceDescriptionDiv"></div>
         <div id="rollAbilityScoresDiv" class="d-flex w-100 justify-content-between mb-3">
-            <div class="text-center me-3">
+            <div id="strDiv" class="text-center me-3">
                 <div class="fs-4">STR</div>
                 <div><input id="strValue" type="text" size="3" class="mb-2" style="text-align: center;"></div>
-                <button id="strBtn" type="button" class="btn btn-primary w-100">Roll</button>
+                <div id="strBtn" type="button" class="btn btn-primary roll-btn w-100">Roll</div>
             </div>
-            <div class="text-center mx-3">
+            <div id="dexDiv" class="text-center mx-3">
                 <div class="fs-4">DEX</div>
                 <div><input id="dexValue" type="text" size="3" class="mb-2" style="text-align: center;"></div>
-                <button id="dexBtn" type="button" class="btn btn-primary w-100">Roll</button>
+                <div id="dexBtn" type="button" class="btn btn-primary roll-btn w-100">Roll</div>
             </div>
-            <div class="text-center mx-3">
+            <div id="conDiv" class="text-center mx-3">
                 <div class="fs-4">CON</div>
                 <div><input id="conValue" type="text" size="3" class="mb-2" style="text-align: center;"></div>
-                <button id="conBtn" type="button" class="btn btn-primary w-100">Roll</button>
+                <div id="conBtn" type="button" class="btn btn-primary roll-btn w-100">Roll</div>
             </div>
-            <div class="text-center mx-3">
+            <div id="intDiv" class="text-center mx-3">
                 <div class="fs-4">INT</div>
                 <div><input id="intValue" type="text" size="3" class="mb-2" style="text-align: center;"></div>
-                <button id="intBtn" type="button" class="btn btn-primary w-100">Roll</button>
+                <div id="intBtn" type="button" class="btn btn-primary roll-btn w-100">Roll</div>
             </div>
-            <div class="text-center mx-3">
+            <div id="wisDiv" class="text-center mx-3">
                 <div class="fs-4">WIS</div>
                 <div><input id="wisValue" type="text" size="3" class="mb-2" style="text-align: center;"></div>
-                <button id="wisBtn" type="button" class="btn btn-primary w-100">Roll</button>
+                <div id="wisBtn" type="button" class="btn btn-primary roll-btn w-100">Roll</div>
             </div>
-            <div class="text-center ms-3">
+            <div id="chaDiv" class="text-center ms-3">
                 <div class="fs-4">CHA</div>
                 <div><input id="chaValue" type="text" size="3" class="mb-2" style="text-align: center;"></div>
-                <button id="chaBtn" type="button" class="btn btn-primary w-100">Roll</button>
+                <div id="chaBtn" type="button" class="btn btn-primary roll-btn w-100">Roll</div>
             </div>
 
         </div>
