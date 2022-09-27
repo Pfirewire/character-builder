@@ -1,7 +1,8 @@
 $(()=> {
-
+    // Base api url
     let baseUrl = "https://www.dnd5eapi.co/api/";
 
+    // Create character object with methods
     const CreateCharacter = {
         rollDSix: () => {
             return Math.floor(Math.random() * 6) + 1;
@@ -17,7 +18,7 @@ $(()=> {
             Output.changeRollButton(rolls, lowestRollIndex, scoreDiv);
         }
     };
-
+    // Output object with methods
     const Output = {
         listSelectOptions: data => {
             let html = "";
@@ -93,6 +94,8 @@ $(()=> {
             `);
         })
     ;
+
+    // Get all races and display in select box
     $.get(baseUrl + "races", () => {})
         .done(data => {
             let races = data;
@@ -111,6 +114,7 @@ $(()=> {
         })
     ;
 
+    // Called whenever roll buttons are clicked
     $(".roll-btn").click(function(e) {
         console.log("inside click roll-btn");
         console.log($(this).parent().attr("id"));
