@@ -25,7 +25,7 @@ $(()=> {
         },
         proficiencyChoices: () => {
             $("#allClasses").change(() => {
-                if($("#allClasses").val() != 0) {
+                if($("#allClasses").val() !== 0) {
                     $.get(`${baseUrl}classes/${$("#allClasses").val()}`, () => {
                     })
                         .done(characterClass => {
@@ -78,7 +78,7 @@ $(()=> {
         printProficiencyOptions: characterClass => {
             let html = "";
             html += `
-                <span>Choose ${characterClass.proficiency_choices[0].choose} from the following list: </span>
+                <div>Choose ${characterClass.proficiency_choices[0].choose} from the following list: </div>
             `;
             return html;
         },
