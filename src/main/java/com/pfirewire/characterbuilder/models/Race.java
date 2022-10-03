@@ -1,9 +1,7 @@
 package com.pfirewire.characterbuilder.models;
 
-public class EquipmentLite {
+public class Race {
 
-    private String index;
     private String name;
     private String url;
-
 }

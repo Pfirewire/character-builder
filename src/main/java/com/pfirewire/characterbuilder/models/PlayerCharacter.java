@@ -6,8 +6,12 @@ public class PlayerCharacter {
 
     private String name;
     private CharacterClass characterClass;
-    private RaceLite race;
-    private List<AbilityScore> abilityScores;
-    private HitPoints hitPoints;
+    private String race;
+    private int level;
+    private int maxHP;
+    private int currentHP;
+    private AbilityScores abilityScores;
+    private List<Spell> knownSpells;
+
 
 }
